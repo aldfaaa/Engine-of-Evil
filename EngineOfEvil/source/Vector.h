@@ -28,6 +28,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 #define EVIL_VECTOR_H
 
 #include <float.h>
+#include "SDL_stdinc.h"
 #include "SDL.h"			// for SDL_sqrtf
 #include "Math.h"
 

@@ -46,6 +46,14 @@ eErrorLogger::~eErrorLogger() {
 }
 
 //******************
+// AutoLogSDLError
+// callback given to SDL to log errors
+//******************
+void AutoLogSDLError(void * userdata, int category, SDL_LogPriority priority, const char * message) {
+	EVIL_ERROR_LOG.logStream << "\n\n[SDL ERROR] Category: " << category << "\tPriority: " << priority << "\nMessage: " << message << "\n(See SDL Documentation for category/priority enums)";
+}
+
+//******************
 // eErrorLogger::Init
 //******************
 bool eErrorLogger::Init() {
@@ -102,12 +110,4 @@ void eErrorLogger::CheckSDLError(const char * sourceFilepath, int lineOfCode) {
 		LogError((message + error).c_str(), sourceFilepath, lineOfCode);
 		SDL_ClearError();
 	}
-}
-
-//******************
-// AutoLogSDLError
-// callback given to SDL to log errors
-//******************
-void AutoLogSDLError(void * userdata, int category, SDL_LogPriority priority, const char * message) {
-	EVIL_ERROR_LOG.logStream << "\n\n[SDL ERROR] Category: " << category << "\tPriority: " << priority << "\nMessage: " << message << "\n(See SDL Documentation for category/priority enums)";
 }

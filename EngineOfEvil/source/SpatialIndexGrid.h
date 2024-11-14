@@ -108,7 +108,7 @@ public:
 	int						LayerDepth(const int layer) const;
 	int						LayerFromZPosition(int zPosition) const;
 	int						MinZPositionFromLayer(const Uint32 layer) const;
-	int						MaxZPositionFromLayer(const Uint32 layer) const;
+	// int						MaxZPositionFromLayer(const Uint32 layer) const;
 	int						CellWidth() const;
 	int						CellHeight() const;
 	void					SetGridSize(const int numRows, const int numColumns);
@@ -469,10 +469,10 @@ inline int eSpatialIndexGrid<type, rows, columns>::MinZPositionFromLayer(const U
 // eSpatialIndexGrid::MaxZPositionFromLayer
 // DEBUG: layer > 0 && layer < layerDepths.size()
 //******************
-template< class type, int rows, int columns>
-inline int eSpatialIndexGrid<type, rows, columns>::MaxZPositionFromLayer(const Uint32 layer) const {
-	return MinLayerZ(layer) + layerDepths[layer];
-}
+// template< class type, int rows, int columns>
+// inline int eSpatialIndexGrid<type, rows, columns>::MaxZPositionFromLayer(const Uint32 layer) const {
+// 	return MinLayerZ(layer) + layerDepths[layer];
+// }
 
 //******************
 // eSpatialIndexGrid::CellWidth

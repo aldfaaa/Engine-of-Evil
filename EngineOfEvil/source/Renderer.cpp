@@ -38,16 +38,20 @@ bool eRenderer::Init(const char * name, int windowWidth, int windowHeight) {
 							   SDL_WINDOWPOS_UNDEFINED, 
 							   windowWidth, 
 							   windowHeight, 
-							   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL );
+							   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
-	if (!window)
+	if (!window) {
+		EVIL_ERROR_LOG.ErrorPopupWindow("SDL_CreateWindow FAILURE");
 		return false;
+	}
 
 	// DEBUG: SDL_RENDERER_TARGETTEXTURE allows rendering to SDL_Textures
 	internal_renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
 
-	if (!internal_renderer)
+	if (!internal_renderer) {
+		EVIL_ERROR_LOG.ErrorPopupWindow("SDL_CreateRenderer FAILURE");
 		return false;
+	}
 
 	// enable linear anti-aliasing for the renderer context
 //	SDL_SetHintWithPriority(SDL_HINT_RENDER_SCALE_QUALITY, "linear" , SDL_HINT_OVERRIDE);
@@ -274,6 +278,9 @@ void eRenderer::DrawCartesianRect(eRenderTarget * target, const SDL_Color & colo
 void eRenderer::DrawImage(eRenderImage * renderImage) const {
 	eVec2 drawPoint = renderImage->origin - currentRenderTarget->origin;
 	drawPoint.SnapInt();
+	// if ((uint64_t)renderImage >= 0x600000000000U) {
+	// 	return;
+	// }
 	renderImage->dstRect = { (int)drawPoint.x, (int)drawPoint.y, renderImage->srcRect->w, renderImage->srcRect->h };
 	SDL_RenderCopy(internal_renderer, renderImage->image->Source(), renderImage->srcRect, &renderImage->dstRect);
 }
@@ -457,13 +464,15 @@ void eRenderer::FlushCameraPool(eCamera * registeredCamera) {
 	auto & cameraPoolInserts = registeredCamera->cameraPoolInserts;
 
 	// sort the dynamicPool for the scalableTarget
-	QuickSort(	cameraPool.data(),
+	if (cameraPool.size() >= 1) {
+		QuickSort(	cameraPool.data(),
 				cameraPool.size(),
 				[](auto && a, auto && b) {
 					if (a->priority < b->priority) return -1;
 					else if (a->priority > b->priority) return 1;
 					return 0;
 			});
+	}
 
 // FREEHILL BEGIN 3d topological sort
 	TopologicalDrawDepthSort(cameraPoolInserts);	// assign a "localDrawDepth" priority amongst the cameraPoolInserts
@@ -471,7 +480,7 @@ void eRenderer::FlushCameraPool(eCamera * registeredCamera) {
 		bool behindAnotherRenderBlock = false;
 
 		// minimize time spent re-sorting static renderImages and just insert the dynamic ones
-		for (auto & iter = cameraPool.begin(); iter != cameraPool.end(); ++iter) {
+		for (auto iter = cameraPool.begin(); iter != cameraPool.end(); ++iter) {
 			if (eCollision::AABBAABBTest(imageToInsert->worldClip, (*iter)->worldClip)) {	
 				if (!eCollision::IsAABB3DInIsometricFront(imageToInsert->renderBlock, (*iter)->renderBlock)) {
 					behindAnotherRenderBlock = true;
@@ -490,8 +499,13 @@ void eRenderer::FlushCameraPool(eCamera * registeredCamera) {
 	SetRenderTarget(&registeredCamera->renderTarget);
 
 	// draw to the scalableTarget
-	for (auto && renderImage : cameraPool)
+	for (auto renderImage : cameraPool) {
+		if (renderImage == nullptr) {
+			EVIL_ERROR_LOG.LogError("renderImage == nullptr", __FILE__, __LINE__);
+			continue;
+		}
 		DrawImage(renderImage);
+	}
 
 	cameraPool.clear();
 	cameraPoolInserts.clear();

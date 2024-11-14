@@ -31,6 +31,8 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 //****************
 bool eGame::InitSystem() {
 
+	// if (SDL_Init(SDL_INIT_EVERYTHING SDL_INIT_VIDEO) == -1) {
+	// SDL_INIT_EVERYTHING
 	if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
 		EVIL_ERROR_LOG.ErrorPopupWindow("SDL INIT FAILURE");
 		return false;

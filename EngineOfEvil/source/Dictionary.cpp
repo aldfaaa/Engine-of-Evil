@@ -37,7 +37,7 @@ eVec2 eDictionary::GetVec2( const char *key, const char *defaultString ) const {
 		defaultString = "0 0";
 
 	resultString = GetString(key, defaultString);
-	sscanf_s(resultString, "%f %f", &result.x, &result.y);
+	sscanf(resultString, "%f %f", &result.x, &result.y);
 	return result;
 }
 
@@ -52,7 +52,7 @@ eVec3 eDictionary::GetVec3( const char *key, const char *defaultString) const {
 		defaultString = "0 0 0";
 
 	resultString = GetString(key, defaultString);
-	sscanf_s(resultString, "%f %f %f", &result.x, &result.y, &result.z);
+	sscanf(resultString, "%f %f %f", &result.x, &result.y, &result.z);
 	return result;
 }
 
@@ -67,6 +67,6 @@ eQuat eDictionary::GetVec4( const char *key, const char *defaultString) const {
 		defaultString = "0 0 0 0";
 
 	resultString = GetString( key, defaultString );
-	sscanf_s(resultString, "%f %f %f %f", &result.x, &result.y, &result.z, &result.w);
+	sscanf(resultString, "%f %f %f %f", &result.x, &result.y, &result.z, &result.w);
 	return result;
 }

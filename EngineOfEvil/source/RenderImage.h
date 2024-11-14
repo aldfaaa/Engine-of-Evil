@@ -177,7 +177,11 @@ inline const eBounds3D & eRenderImage::GetRenderBlock() const {
 // DEBUG: only call this after ImageFrame has been assigned
 //*************
 inline void eRenderImage::UpdateWorldClip() {
-	worldClip = eBounds(origin, origin + eVec2((float)srcRect->w, (float)srcRect->h));
+	if (srcRect != nullptr) {
+		worldClip = eBounds(origin, origin + eVec2((float)srcRect->w, (float)srcRect->h));
+	} else {
+		worldClip = eBounds(origin, origin);
+	}
 }
 
 //*************

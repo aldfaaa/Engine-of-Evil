@@ -27,7 +27,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 #ifndef EVIL_DEQUE_H
 #define EVIL_DEQUE_H
 
-#include <new.h>		// std::move
+//#include <new.h>		// std::move
 #include <utility>		// std::swap
 
 template<class type>

@@ -284,7 +284,7 @@ bool eMovementPlanner::CheckVectorPath(decision_t & along) {
 	static const float maxSteps = 5.0f;										// how many future steps to test
 
 	auto & ownerCollisionModel = owner->CollisionModel();
-	auto & boundsCenter = ownerCollisionModel.AbsBounds().Center();
+	auto boundsCenter = ownerCollisionModel.AbsBounds().Center();
 	float castLength = maxMoveSpeed * maxSteps;
 	float nearestFraction = 1.0f;
 	float mapEdgeFraction = 1.0f;

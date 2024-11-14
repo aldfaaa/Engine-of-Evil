@@ -30,6 +30,8 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 #include <vector>
 #include <functional>
 
+#define INVALID_INDEX			(-1)
+
 //************************************
 //			HashIndex
 // Fast hash table for indexes and arrays
@@ -74,7 +76,7 @@ private:
 	int					hashMask;
 
 	static const int	defaultHashSize = 1;
-	static const int	INVALID_INDEX = -1;
+	// static const int	INVALID_INDEX = -1;
 };
 
 //*******************

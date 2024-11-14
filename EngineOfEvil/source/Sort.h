@@ -27,7 +27,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 #ifndef EVIL_SORT_H
 #define EVIL_SORT_H
 
-#include <new.h>		// std::move
+//#include <new.h>		// std::move
 #include <utility>		// std::swap
 
 //*****************************************************************************
@@ -38,7 +38,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 // DEBUG: compare must be of the lessThan (-1), greaterThan(1), equalTo(0) return type variety
 //*****************************************************************************
 template <class type, class lambdaCompare>
-void QuickSort(type * data, const int numElements, lambdaCompare & compare) noexcept {
+void QuickSort(type * data, const int numElements, lambdaCompare && compare) noexcept {
 
 	if (numElements <= 1)
 		return;
@@ -116,10 +116,10 @@ void QuickSort(type * data, const int numElements, lambdaCompare & compare) noex
 //*****************************************************************************
 template<class type, class lambdaCompare>
 void HeapSort(type * data, const int numElements, lambdaCompare & compare) noexcept {
-
 	// heapify
+	int parent = 0, child = 0;
 	for (int i = numElements / 2; i > 0; i--) {
-		int parent = i - 1;
+		parent = i - 1;
 		for (child = 2 * parent + 1; child < numElements; child = 2 * parent + 1) {
 			if (child + 1 < numElements && compare(data[child], data[child + 1]))
 				child++;
@@ -135,7 +135,7 @@ void HeapSort(type * data, const int numElements, lambdaCompare & compare) noexc
 	for (int i = numElements - 1; i > 0; i--) {
 		std::swap(data[0], data[i]);
 		// SiftDown using fewer elements
-		for (int parent = 0, int child = 2 * parent + 1; child < i; child = 2 * parent + 1) {
+		for (parent = 0, child = 2 * parent + 1; child < i; child = 2 * parent + 1) {
 			if (child + 1 < i && compare(data[child], data[child + 1]))
 				child++;
 			if (!compare(data[parent], data[child]))

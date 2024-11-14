@@ -132,7 +132,7 @@ void eRenderImage::ClearAreas() {
 		if (contents.empty())	// FIXME: necessary to prevent a shutdown crash using std::unordered_map::find (insead of std::find) because of index reference
 			continue;
 
-		auto & index = contents.find(this);
+		auto index = contents.find(this);
 		if (index != contents.end())
 			contents.erase(index);
 	}

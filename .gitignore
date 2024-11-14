@@ -1,0 +1,5 @@
+/**/*.o
+/Builds/
+/dist/
+/.vscode/
+*.log 

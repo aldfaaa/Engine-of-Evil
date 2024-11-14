@@ -27,7 +27,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 #include "Game.h"
 #include "GameObject.h"
 #include "Map.h"
-
+#include <cstdio>
 //**************
 // eGameObject::eGameObject
 //**************
@@ -155,8 +155,13 @@ bool eGameObject::AddRenderImage( const std::string & spriteFilename, const eVec
 
 	renderImage = std::make_unique<eRenderImage>(this);
 	std::shared_ptr<eImage> spriteImage = nullptr;
-	if (!game->GetImageManager().LoadAndGet(spriteFilename.c_str(), spriteImage))
+
+	/// BUG:此处LoadAndGet会失败!
+	if (!game->GetImageManager().LoadAndGet(spriteFilename.c_str(), spriteImage)) {
+		printf("LoadAndGet(%s) => false\n", spriteFilename.c_str());
+		EVIL_ERROR_LOG.LogError("LoadAndGet() => false", __FILE__, __LINE__);
 		return false;
+	}
 
 	renderImage->SetImage(spriteImage->GetManagerIndex());
 	if (initialSpriteFrame < 0 || initialSpriteFrame > spriteImage->NumSubframes())

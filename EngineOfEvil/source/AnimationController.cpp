@@ -26,6 +26,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 */
 #include "AnimationController.h"
 #include "Game.h"
+#include "Sort.h"
 
 //************
 // eAnimationController::eAnimationController
@@ -179,17 +180,21 @@ void eAnimationController::AddTransition(eStateTransition && newTransition) {
 // transitions that occur from anyState are arranged so their conditions are checked first
 //***********************
 void eAnimationController::SortAndHashTransitions() {
-	QuickSort( stateTransitions.data(), 
-			   stateTransitions.size(),
-				[](auto && a, auto && b) { 
-					if (a.anyState && !b.anyState) return -1;
-					else if (!a.anyState && b.anyState) return 1;
-					return 0; 
-	});
+	auto lamb = [](auto &&a, auto &&b) -> int {
+              if (a.anyState && !b.anyState)
+                return -1;
+              else if (!a.anyState && b.anyState)
+                return 1;
+              return 0;
+            };
+  QuickSort(stateTransitions.data(), 
+						static_cast<int>(stateTransitions.size()),
+            lamb);
 
-	for (size_t i = 0; i < stateTransitions.size(); ++i) {
-		const int hashKey = animationStates[stateTransitions[i].fromState]->nameHash;
-		transitionsHash.Add(hashKey, i);
+  for (size_t i = 0; i < stateTransitions.size(); ++i) {
+    const int hashKey =
+        animationStates[stateTransitions[i].fromState]->nameHash;
+    transitionsHash.Add(hashKey, i);
 	}
 }
 

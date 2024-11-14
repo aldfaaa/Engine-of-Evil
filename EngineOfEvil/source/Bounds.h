@@ -26,7 +26,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 */
 #ifndef EVIL_BOUNDS_H
 #define EVIL_BOUNDS_H
-
+#include "SDL_stdinc.h"
 #include "Vector.h"
 #include "Class.h"
 

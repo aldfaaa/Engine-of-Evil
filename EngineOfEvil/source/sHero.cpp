@@ -40,9 +40,11 @@ void sHero::Think() {
 		facingDirection = oldFacingDirection * 0.25f;
 	}
 			
-	animationController->SetFloatParameter(xSpeedParameterHash, facingDirection.x);
-	animationController->SetFloatParameter(ySpeedParameterHash, facingDirection.y);
-	animationController->SetFloatParameter(magnitudeParameterHash, facingDirection.Length());
+	if (animationController != nullptr) {
+		animationController->SetFloatParameter(xSpeedParameterHash, facingDirection.x);
+		animationController->SetFloatParameter(ySpeedParameterHash, facingDirection.y);
+		animationController->SetFloatParameter(magnitudeParameterHash, facingDirection.Length());
+	}
 }
 
 //***************
@@ -50,7 +52,7 @@ void sHero::Think() {
 // copies a prefab sHero and adds unique details
 //***************
 bool sHero::SpawnCopy(eMap * onMap, const eVec3 & worldPosition) {
-	auto & newHero = std::make_unique<sHero>(*this);
+	auto newHero = std::make_unique<sHero>(*this);
 	newHero->map = onMap;
 	newHero->SetZPosition(worldPosition.z);
 	newHero->SetOrigin(eVec2(worldPosition.x, worldPosition.y));

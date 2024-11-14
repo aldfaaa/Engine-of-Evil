@@ -33,7 +33,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 // DEBUG: *this is typically a prefab from eEntityPrefabManager::SpawnInstance
 //***************
 bool eEntity::SpawnCopy(eMap * onMap, const eVec3 & worldPosition) {
-	auto & newEntity = std::make_unique<eEntity>(*this);
+	auto newEntity = std::make_unique<eEntity>(*this);
 	newEntity->map = onMap;
 	newEntity->SetZPosition(worldPosition.z);
 	newEntity->SetOrigin(eVec2(worldPosition.x, worldPosition.y));

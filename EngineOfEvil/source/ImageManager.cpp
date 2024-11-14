@@ -63,7 +63,7 @@ bool eImageManager::Init() {
 		((Uint32*)pixels)[i] = redPixel;
 	SDL_UnlockTexture(error_texture);
 
-	auto & error_image = std::make_shared<eImage>(error_texture, "error_image", resourceList.size());
+	auto error_image = std::make_shared<eImage>(error_texture, "error_image", resourceList.size());
 	std::vector<SDL_Rect> oneDefaultFrame;
 	oneDefaultFrame.emplace_back(SDL_Rect{ 0, 0, error_image->GetWidth(), error_image->GetHeight() });
 	error_image->SetSubframes(std::move(oneDefaultFrame));
@@ -193,6 +193,12 @@ bool eImageManager::LoadAndGet(const char * resourceFilename, std::shared_ptr<eI
 	char textureFilepath[MAX_ESTRING_LENGTH];
 	memset(textureFilepath, 0, sizeof(textureFilepath));
 	read.getline(textureFilepath, sizeof(textureFilepath), '\n');				// texture file
+
+	for (size_t i = 0; i < strlen(textureFilepath) + 1; i++) {
+		if (textureFilepath[i] == '\r')
+			textureFilepath[i] = '\0';
+	}
+
 	if(!VerifyRead(read))
 		return false;
 
@@ -241,6 +247,7 @@ bool eImageManager::LoadAndGet(const char * resourceFilename, std::shared_ptr<eI
 		SDL_FreeSurface(source);
 		SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	} else {
+		/// FIXME:第二次执行此处会加载失败
 		texture = IMG_LoadTexture(game->GetRenderer().GetSDLRenderer(), textureFilepath);
 
 		// unable to initialize texture

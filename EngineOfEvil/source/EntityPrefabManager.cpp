@@ -36,7 +36,7 @@ bool eEntityPrefabManager::Init() {
 	prefabShortNameHash.ClearAndResize(MAX_PREFAB_ENTITIES);
 
 	// register the error_prefab_entity as the first element of resourceList
-	auto & errorPrefab = std::make_shared<eEntity>();
+	auto errorPrefab = std::make_shared<eEntity>();
 	errorPrefab->InitResource("error_prefab_entity_no_resourceFilename", 0); 
 	RegisterPrefab(errorPrefab, "error_prefab_entity");	// default error prefab entity
 	return true;

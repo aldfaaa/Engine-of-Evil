@@ -34,7 +34,7 @@ bool eAnimationControllerManager::Init() {
 	// prepare the hashindex
 	resourceHash.ClearAndResize(MAX_ANIMATION_CONTROLLERS);
 
-	auto & error_animation_controller = std::make_shared<eAnimationController>("error_animation_controller", resourceList.size());	
+	auto error_animation_controller = std::make_shared<eAnimationController>("error_animation_controller", resourceList.size());	
 	error_animation_controller->Init(1, 0, 0, 0, 0, 0);
 	if (!error_animation_controller->AddAnimationState(std::make_unique<eAnimationState>("error_state", game->GetAnimationManager().GetByResourceID(0), 1.0f)))
 		return false;
@@ -325,7 +325,7 @@ bool eAnimationControllerManager::LoadAndGet(const char * resourceFilename, std:
 					// (1.0f / numAnimations) * currentAnimationLoadedCount so they are evenly distributed
 					// OR: add a "distribute" boolean at the top of the blend state file-definition
 					// to indicate how to affect/ignore the values in the file
-					auto & newBlendState = std::make_unique<eBlendState>(stateName, numAnimations, xBlendParameterHash, yBlendParameterHash, blendMode, stateSpeed);
+					auto newBlendState = std::make_unique<eBlendState>(stateName, numAnimations, xBlendParameterHash, yBlendParameterHash, blendMode, stateSpeed);
 					while (read.peek() != '}') {							// adding blend nodes
 						read.getline(buffer, sizeof(buffer), ' ');			// animation name
 						std::string animationName(buffer);
