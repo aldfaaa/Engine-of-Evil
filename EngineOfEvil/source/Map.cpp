@@ -76,7 +76,7 @@ bool eMap::LoadMap(const char * mapFilename) {
 	std::ifstream	read(mapFilename);
 	// unable to find/open file
 	if (!read.good()) {
-		EVIL_ERROR_LOG.ErrorPopupWindow("read.good() FAILURE");
+		// EVIL_ERROR_LOG.ErrorPopupWindow("read.good() FAILURE");
 		return false;
 	}
 
@@ -108,7 +108,7 @@ bool eMap::LoadMap(const char * mapFilename) {
 
 		read.ignore(std::numeric_limits<std::streamsize>::max(), '\n');		// skip the rest of the line (BUGFIX: and the # begin layer def comment line)
 		if (!VerifyRead(read)) {
-			EVIL_ERROR_LOG.ErrorPopupWindow("VerifyRead(read) => false");
+			// EVIL_ERROR_LOG.ErrorPopupWindow("VerifyRead(read) => false");
 			return false;
 		}
 	}	
@@ -138,18 +138,18 @@ bool eMap::LoadMap(const char * mapFilename) {
 	}
 	
 	// sprintf(errStr, "prepare eTileImpl::LoadTileset(%s)", buffer);
-	// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+	// // EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 	if (!eTileImpl::LoadTileset(buffer)) {
 		sprintf(errStr, "eTileImpl::LoadTileset(%s) => false:", buffer);
 		EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 		return false;
 	}
 	
-	EVIL_ERROR_LOG.ErrorPopupWindow("LoadTileset OK");
+	// EVIL_ERROR_LOG.ErrorPopupWindow("LoadTileset OK");
 
 	sortTiles.reserve(numRows * numColumns * numLayers);
 
-	EVIL_ERROR_LOG.ErrorPopupWindow("prepare READING LAYERS");
+	// EVIL_ERROR_LOG.ErrorPopupWindow("prepare READING LAYERS");
 	// READING LAYERS
 	Uint32 layer = 0;
 	read.ignore(std::numeric_limits<std::streamsize>::max(), '{');			// ignore up past "Layers {"
@@ -216,7 +216,7 @@ bool eMap::LoadMap(const char * mapFilename) {
 		return false;
 
 	game->GetEntityPrefabManager().BatchLoad(buffer);							// DEBUG: any batch errors get logged, but doesn't stop the map from loading
-	
+
 							  
 	// SPAWNING ENTITIES
 	read.ignore(std::numeric_limits<std::streamsize>::max(), '\n');				// ignore "Spawn_List {\n"
@@ -240,13 +240,13 @@ bool eMap::LoadMap(const char * mapFilename) {
 			std::string message = "Invalid prefabShortName (";
 			message += prefabShortName;
 			message += "), or invalid prefab file contents.";
-			EVIL_ERROR_LOG.LogError(message.c_str(), __FILE__, __LINE__);
+			// EVIL_ERROR_LOG.LogError(message.c_str(), __FILE__, __LINE__);
 		}
 	}
 
 	read.close();
 	sprintf(errStr, "after read.close()");
-	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+	// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 	// initialize the static map images sort order
 	eRenderer::TopologicalDrawDepthSort(sortTiles);	
 	return true;

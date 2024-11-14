@@ -25,6 +25,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 ===========================================================================
 */
 #include "ErrorLogger.h"
+#include <iostream>
 
 eErrorLogger eErrorLogger::errorLog;
 
@@ -93,8 +94,8 @@ void eErrorLogger::LogError(const char * message, const char * sourceFilepath, i
 		return;
 	}
 
-	logStream << "\n\n" << message;
-	logStream << "\nFile: " << sourceFilepath << "\nLine: " << lineOfCode;
+	std::cout << "\n\n" << message;
+	std::cout << "\nFile: " << sourceFilepath << "\nLine: " << lineOfCode << std::endl;
 }
 
 

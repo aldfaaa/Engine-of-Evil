@@ -69,7 +69,7 @@ bool eTileImpl::LoadTileset(const char * tilesetFilename, bool appendNew) {
 		return false;
 
 	sprintf(errStr, "after read.good()");
-	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+	// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 	
 	read.ignore(std::numeric_limits<std::streamsize>::max(), '\n');			// skip the first line comment
 	char buffer[MAX_ESTRING_LENGTH];
@@ -77,14 +77,14 @@ bool eTileImpl::LoadTileset(const char * tilesetFilename, bool appendNew) {
 	read.getline(buffer, sizeof(buffer), '\n');
 
 	sprintf(errStr, "prepare BatchLoad(%s)", buffer);
-	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+	// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 
 	if (!VerifyRead(read) || !game->GetImageManager().BatchLoad(buffer))
 		return false;
 
 
 	sprintf(errStr, "after game->GetImageManager().BatchLoad()");
-	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+	// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 
 	enum {
 		LOADING_DEFAULT_COLLISION,
@@ -172,7 +172,7 @@ bool eTileImpl::LoadTileset(const char * tilesetFilename, bool appendNew) {
 			return false;
 
 		sprintf(errStr, "prepare GetByFilename(%s)", buffer);
-		EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+		// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 		// get a pointer to a source image
 		auto & sourceImage = game->GetImageManager().GetByFilename(buffer);
 		if (!sourceImage->IsValid())
@@ -207,7 +207,7 @@ bool eTileImpl::LoadTileset(const char * tilesetFilename, bool appendNew) {
 
 	read.close();
 	sprintf(errStr, "done");
-	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+	// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 
 	return !tileSet.empty();
 }

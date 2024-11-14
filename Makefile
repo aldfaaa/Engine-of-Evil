@@ -1,7 +1,7 @@
 CC := g++
 
 CFLAGS := `sdl2-config --cflags` 
-LDFLAGS := `sdl2-config --libs` -I/usr/include/SDL2 -lm -lSDL2_ttf -lSDL2_mixer -lSDL2_image
+LDFLAGS := `sdl2-config --libs` -I/usr/include/SDL2 -lm -lSDL2_ttf -lSDL2_mixer -lSDL2_image -lpng
 EXTRA_FLAGS := 
 
 HDRS :=
@@ -20,10 +20,11 @@ EMSCRIPTEN_ACTIVATE_SCRIPT := /opt/ye/WebAssembly/emsdk-main/emsdk_env.sh
 EM_BUILD_DIR := dist
 
 # -I/opt/ye/WebAssembly/emsdk-main/upstream/emscripten/cache/sysroot/include/SDL
+
 EMFLAGS := -I./EngineOfEvil/source \
 					-I/opt/ye/WebAssembly/emsdk-main/upstream/emscripten/cache/sysroot/include/SDL2
 
-EMLFLAGS := -sUSE_SDL=2 -sUSE_SDL_TTF=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_MIXER=2 \
+EMLFLAGS := -sUSE_SDL=2 -sUSE_SDL_TTF=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_MIXER=2 -sUSE_LIBPNG \
 					-sALLOW_MEMORY_GROWTH --embed-file asset_dir@/ 
 
 #--preload-file asset_dir@/

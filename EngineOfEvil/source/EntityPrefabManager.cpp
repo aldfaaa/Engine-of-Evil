@@ -26,7 +26,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 */
 #include "EntityPrefabManager.h"
 #include "Game.h"
-
+extern char errStr[128];
 //**************************
 // eEntityPrefabManager::Init
 //**************************
@@ -108,6 +108,8 @@ std::shared_ptr<eEntity> & eEntityPrefabManager::GetByShortName(const std::strin
 // [NOTE]: batch entity prefab files are .bprf
 //**************************
 bool eEntityPrefabManager::LoadAndGet(const char * resourceFilename, std::shared_ptr<eEntity> & result) {
+	sprintf(errStr, "call LoadAndGet");
+	EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 	if ((result = GetByFilename(resourceFilename))->IsValid())						// prefab already loaded
 		return true;
 

@@ -26,7 +26,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 */
 #include "AnimationManager.h"
 #include "Game.h"
-
+extern char errStr[128];
 //***********************
 // eAnimationManager::Init
 //***********************
@@ -62,9 +62,15 @@ bool eAnimationManager::Init() {
 // [NOTE]: batch animation files are .banim
 //***********************
 bool eAnimationManager::LoadAndGet(const char * resourceFilename, std::shared_ptr<eAnimation> & result) {
+	sprintf(errStr, "call LoadAndGet");
+	EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 	// animation already loaded
-	if ((result = GetByFilename(resourceFilename))->IsValid())
+	sprintf(errStr, "call LoadAndGet");
+	EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
+	if ((result = GetByFilename(resourceFilename))->IsValid()) {
 		return true;
+	}
+	EVIL_ERROR_LOG.LogError("after GetByFilename", __FILE__, __LINE__);
 
 	std::ifstream	read(resourceFilename);
 	if (!read.good()) {

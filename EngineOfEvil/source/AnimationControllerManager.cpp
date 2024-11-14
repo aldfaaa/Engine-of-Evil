@@ -26,7 +26,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 */
 #include "AnimationControllerManager.h"
 #include "Game.h"
-
+extern char errStr[128];
 //***********************
 // AnimationControllerManager::Init
 //***********************
@@ -110,6 +110,8 @@ controllerParamType1 controllerParamName1 compareEnumName1 transitionValue\n
 // [NOTE]: batch animation files are .bctrl
 //***********************
 bool eAnimationControllerManager::LoadAndGet(const char * resourceFilename, std::shared_ptr<eAnimationController> & result) {
+	sprintf(errStr, "call LoadAndGet");
+	EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 	// animation controller already loaded
 	if ((result = GetByFilename(resourceFilename))->IsValid())
 		return true;
