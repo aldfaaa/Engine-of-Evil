@@ -26,6 +26,8 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 */
 #include "Game.h"
 
+extern char errStr[128];
+
 //***************************
 // eImageManager::Init
 //***************************
@@ -42,8 +44,11 @@ bool eImageManager::Init() {
 		width,
 		height);
 
-	if (!error_texture)
+	if (!error_texture) {
+		sprintf(errStr, "error_texture == 0:%s", SDL_GetError());
+		EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 		return false;
+	}
 
 	SDL_PixelFormat * pixelFormat = SDL_AllocFormat(SDL_PIXELFORMAT_ARGB8888);
 	Uint32 redPixel = SDL_MapRGBA(pixelFormat, 255, 0, 0, 255);
@@ -53,6 +58,8 @@ bool eImageManager::Init() {
 	void * pixels = nullptr;
 	int pitch = 0;
 	if (SDL_LockTexture(error_texture, NULL, &pixels, &pitch) == -1) {
+		sprintf(errStr, "SDL_LockTexture == 0:%s", SDL_GetError());
+		EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 		SDL_DestroyTexture(error_texture);
 		return false;
 	}
@@ -182,6 +189,8 @@ bool eImageManager::LoadSubframes(std::ifstream & read, std::shared_ptr<eImage> 
 // [NOTE]: batch image files are .bimg
 //***************************
 bool eImageManager::LoadAndGet(const char * resourceFilename, std::shared_ptr<eImage> & result) {
+	sprintf(errStr, "call LoadAndGet(%s)", resourceFilename);
+	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 	// image already loaded
 	if ((result = GetByFilename(resourceFilename))->IsValid())
 		return true;
@@ -224,7 +233,7 @@ bool eImageManager::LoadAndGet(const char * resourceFilename, std::shared_ptr<eI
 			result = resourceList[0]; // default error image
 			return false;
 		}
-
+		EVIL_ERROR_LOG.ErrorPopupWindow("prepare IMG_LoadTexture ");
 		texture = SDL_CreateTexture(game->GetRenderer().GetSDLRenderer(),
 												  source->format->format,
 												  accessType, 
@@ -247,9 +256,9 @@ bool eImageManager::LoadAndGet(const char * resourceFilename, std::shared_ptr<eI
 		SDL_FreeSurface(source);
 		SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	} else {
+		EVIL_ERROR_LOG.ErrorPopupWindow("prepare SDL_CreateTexture");
 		/// FIXME:第二次执行此处会加载失败
 		texture = IMG_LoadTexture(game->GetRenderer().GetSDLRenderer(), textureFilepath);
-
 		// unable to initialize texture
 		if (texture == NULL) {
 			result = resourceList[0]; // default error image

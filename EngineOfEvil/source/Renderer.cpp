@@ -26,6 +26,13 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 */
 #include "Game.h"
 
+// #ifdef __ENSCRIPTEN__
+#if 1
+#define FONT_PATH "Alfphabet.ttf"
+#else
+#define FONT_PATH "EngineOfEvil/Graphics/Fonts/Alfphabet.ttf"
+#endif
+
 int eRenderer::globalDrawDepth	= 0;
 
 //***************
@@ -46,7 +53,7 @@ bool eRenderer::Init(const char * name, int windowWidth, int windowHeight) {
 	}
 
 	// DEBUG: SDL_RENDERER_TARGETTEXTURE allows rendering to SDL_Textures
-	internal_renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_TARGETTEXTURE);
+	internal_renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_TARGETTEXTURE);
 
 	if (!internal_renderer) {
 		EVIL_ERROR_LOG.ErrorPopupWindow("SDL_CreateRenderer FAILURE");
@@ -65,13 +72,21 @@ bool eRenderer::Init(const char * name, int windowWidth, int windowHeight) {
 	if (!debugOverlayTarget.Init(internal_renderer, viewArea.w, viewArea.h))
 		return false;
 
-	if (TTF_Init() == -1)
+	if (TTF_Init() == -1) {
+		EVIL_ERROR_LOG.ErrorPopupWindow("TTF_Init() FAILURE");
 		return false;
+	}
 
-	font = TTF_OpenFont("Graphics/Fonts/Alfphabet.ttf", 24);				// FIXME: make this a file-initialized string, not hard-coded
+	font = TTF_OpenFont(FONT_PATH, 18);				// FIXME: make this a file-initialized string, not hard-coded
 
-	if (!font)
+	if (!font) {
+		char errStr[64] = {0};
+		sprintf(errStr, "TTF_OpenFont(%s):%s", FONT_PATH, TTF_GetError());
+		// SDL_LogError(0, "error opening font 18 %s\n%s\\n", FONT_PATH,
+    //              TTF_GetError());
+		EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 		return false;
+	}
 
 	overlayPool.reserve(MAX_IMAGES);
 	overlayPoolInserts.reserve(MAX_IMAGES);

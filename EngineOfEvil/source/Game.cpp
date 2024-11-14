@@ -33,7 +33,8 @@ bool eGame::InitSystem() {
 
 	// if (SDL_Init(SDL_INIT_EVERYTHING SDL_INIT_VIDEO) == -1) {
 	// SDL_INIT_EVERYTHING
-	if (SDL_Init(SDL_INIT_EVERYTHING) == -1) {
+	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_EVENTS | \
+                SDL_INIT_JOYSTICK | SDL_INIT_GAMECONTROLLER) == -1) {
 		EVIL_ERROR_LOG.ErrorPopupWindow("SDL INIT FAILURE");
 		return false;
 	}

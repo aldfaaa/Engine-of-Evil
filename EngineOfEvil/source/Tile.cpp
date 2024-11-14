@@ -28,6 +28,8 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 #include "Tile.h"
 #include "Map.h"
 
+extern char errStr[128];
+
 std::vector<std::pair<int, int>> eTileImpl::tileSet;		// first == index within eImageManager::resourceList; second == eImage subframe index;
 std::array<eTileImpl, eTileImpl::maxTileTypes> eTileImpl::tileTypes;
 
@@ -66,12 +68,23 @@ bool eTileImpl::LoadTileset(const char * tilesetFilename, bool appendNew) {
 	if (!read.good())
 		return false;
 
+	sprintf(errStr, "after read.good()");
+	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+	
 	read.ignore(std::numeric_limits<std::streamsize>::max(), '\n');			// skip the first line comment
 	char buffer[MAX_ESTRING_LENGTH];
 	memset(buffer, 0, sizeof(buffer));
 	read.getline(buffer, sizeof(buffer), '\n');
+
+	sprintf(errStr, "prepare BatchLoad(%s)", buffer);
+	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+
 	if (!VerifyRead(read) || !game->GetImageManager().BatchLoad(buffer))
 		return false;
+
+
+	sprintf(errStr, "after game->GetImageManager().BatchLoad()");
+	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 
 	enum {
 		LOADING_DEFAULT_COLLISION,
@@ -119,6 +132,8 @@ bool eTileImpl::LoadTileset(const char * tilesetFilename, bool appendNew) {
 			readState = LOADING_DEFAULT_RENDERBLOCKS;
 		}
 	} 
+	sprintf(errStr, "after readState == LOADING_DEFAULT_COLLISION");
+	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 
 	std::vector<eVec3> defaultRenderBlockSizes;
 	while (readState == LOADING_DEFAULT_RENDERBLOCKS) {
@@ -156,6 +171,8 @@ bool eTileImpl::LoadTileset(const char * tilesetFilename, bool appendNew) {
 		if(!VerifyRead(read))
 			return false;
 
+		sprintf(errStr, "prepare GetByFilename(%s)", buffer);
+		EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 		// get a pointer to a source image
 		auto & sourceImage = game->GetImageManager().GetByFilename(buffer);
 		if (!sourceImage->IsValid())
@@ -189,6 +206,9 @@ bool eTileImpl::LoadTileset(const char * tilesetFilename, bool appendNew) {
 	}
 
 	read.close();
+	sprintf(errStr, "done");
+	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+
 	return !tileSet.empty();
 }
 

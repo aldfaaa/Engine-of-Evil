@@ -37,7 +37,7 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 //******************************************
 class eImageManager : public eResourceManager<eImage> {
 public:
-
+	// static char errStr[128];
 	virtual bool							Init() override;
 	virtual bool							LoadAndGet(const char * resourceFilename, std::shared_ptr<eImage> & result) override;
 

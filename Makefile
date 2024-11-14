@@ -20,9 +20,13 @@ EMSCRIPTEN_ACTIVATE_SCRIPT := /opt/ye/WebAssembly/emsdk-main/emsdk_env.sh
 EM_BUILD_DIR := dist
 
 # -I/opt/ye/WebAssembly/emsdk-main/upstream/emscripten/cache/sysroot/include/SDL
-EMFLAGS = -I./EngineOfEvil/source \
-					-I/opt/ye/WebAssembly/emsdk-main/upstream/emscripten/cache/sysroot/include/SDL2 \
-					-sUSE_SDL=2 -sUSE_SDL_TTF=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_MIXER=2
+EMFLAGS := -I./EngineOfEvil/source \
+					-I/opt/ye/WebAssembly/emsdk-main/upstream/emscripten/cache/sysroot/include/SDL2
+
+EMLFLAGS := -sUSE_SDL=2 -sUSE_SDL_TTF=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_MIXER=2 \
+					-sALLOW_MEMORY_GROWTH --embed-file asset_dir@/ 
+
+#--preload-file asset_dir@/
 
 # default recipe
 all: compile_run
@@ -48,26 +52,15 @@ clean:
 wasm_build_dir:
 	mkdir -p $(EM_BUILD_DIR)
 
-wasm: wasm_build_dir
-	# source $(EMSCRIPTEN_ACTIVATE_SCRIPT)
-	# cp index.html $(EM_BUILD_DIR)
-	$(EMCC) $(SRCS) $(EMFLAGS) -o $(EM_BUILD_DIR)/main.html
+# source $(EMSCRIPTEN_ACTIVATE_SCRIPT)
+# cp index.html $(EM_BUILD_DIR)
 
-wasm_serve: clean wasm
-	open http://localhost:8000
-	python -m http.server -d $(EM_BUILD_DIR) 8000
+wasm: $(OBJS)
+	EMCC_DEBUG=0
+	$(EMCC) $(OBJS) $(EMFLAGS) $(EMLFLAGS) -o $(EM_BUILD_DIR)/index.html 
 
-publish:
-	git checkout gh-pages
-	git reset --hard master
-	$(MAKE) clean
-	$(MAKE) wasm
-	mv -f dist/* .
-	rm -rf dist/
-	git rm -rf src/ README.md preview.gif
-	git add --all
-	git commit -m "Deploy"
-	git push --force origin gh-pages
-	git checkout master
+${OBJS}:%.o : %.cpp
+	${EMCC} -c $< -o $@ $(EMFLAGS)
+
 
 .PHONY: all clean compile compile_run debug wasm wasm_serve wasm_build_dir publish

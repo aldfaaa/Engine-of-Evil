@@ -2,4 +2,5 @@
 /Builds/
 /dist/
 /.vscode/
-*.log 
+*.log
+asset_dir/

@@ -28,12 +28,14 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 #include "Map.h"
 #include "Camera.h"
 
+char errStr[128] = {0};
+
 //**************
 // eMap::Init
 //**************
 bool eMap::Init () {
 	entities.reserve(MAX_ENTITIES);
-	return LoadMap("Graphics/Maps/EvilMaze.emap");
+	return LoadMap("EvilMaze.emap");
 }
 
 //**************
@@ -73,8 +75,10 @@ bool eMap::Init () {
 bool eMap::LoadMap(const char * mapFilename) {
 	std::ifstream	read(mapFilename);
 	// unable to find/open file
-	if (!read.good()) 
+	if (!read.good()) {
+		EVIL_ERROR_LOG.ErrorPopupWindow("read.good() FAILURE");
 		return false;
+	}
 
 	std::vector<eRenderImage *> sortTiles;
 	char buffer[MAX_ESTRING_LENGTH];
@@ -103,8 +107,10 @@ bool eMap::LoadMap(const char * mapFilename) {
 		}
 
 		read.ignore(std::numeric_limits<std::streamsize>::max(), '\n');		// skip the rest of the line (BUGFIX: and the # begin layer def comment line)
-		if (!VerifyRead(read))
+		if (!VerifyRead(read)) {
+			EVIL_ERROR_LOG.ErrorPopupWindow("VerifyRead(read) => false");
 			return false;
+		}
 	}	
 
 	tileMap.SetGridSize(numRows, numColumns);					
@@ -130,12 +136,20 @@ bool eMap::LoadMap(const char * mapFilename) {
 			cell.TilesOwned().reserve(numLayers);	// BUGFIX: assures the tilesOwned vector data doesn't reallocate/move and invalidate tilesToDraw
 		}
 	}
-
-	if (!eTileImpl::LoadTileset(buffer))
+	
+	// sprintf(errStr, "prepare eTileImpl::LoadTileset(%s)", buffer);
+	// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+	if (!eTileImpl::LoadTileset(buffer)) {
+		sprintf(errStr, "eTileImpl::LoadTileset(%s) => false:", buffer);
+		EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 		return false;
+	}
+	
+	EVIL_ERROR_LOG.ErrorPopupWindow("LoadTileset OK");
 
 	sortTiles.reserve(numRows * numColumns * numLayers);
 
+	EVIL_ERROR_LOG.ErrorPopupWindow("prepare READING LAYERS");
 	// READING LAYERS
 	Uint32 layer = 0;
 	read.ignore(std::numeric_limits<std::streamsize>::max(), '{');			// ignore up past "Layers {"
@@ -202,6 +216,7 @@ bool eMap::LoadMap(const char * mapFilename) {
 		return false;
 
 	game->GetEntityPrefabManager().BatchLoad(buffer);							// DEBUG: any batch errors get logged, but doesn't stop the map from loading
+	
 							  
 	// SPAWNING ENTITIES
 	read.ignore(std::numeric_limits<std::streamsize>::max(), '\n');				// ignore "Spawn_List {\n"
@@ -230,7 +245,8 @@ bool eMap::LoadMap(const char * mapFilename) {
 	}
 
 	read.close();
-
+	sprintf(errStr, "after read.close()");
+	EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 	// initialize the static map images sort order
 	eRenderer::TopologicalDrawDepthSort(sortTiles);	
 	return true;
