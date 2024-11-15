@@ -102,8 +102,8 @@ void eGame::Run() {
 		Uint32 startTime = SDL_GetTicks();
 
 		// system updates
-		input.Update();
-		ReadDebugInput();
+		// input.Update();
+		// ReadDebugInput();
 		Update();
 
 		// draw static debug information

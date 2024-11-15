@@ -159,6 +159,8 @@ bool eEntityPrefabManager::LoadAndGet(const char * resourceFilename, std::shared
 	// and get the index where that prefab is located
 	int prefabManagerIndex = 0;
 	std::string prefabShortName = spawnArgs.GetString("prefabShortName", "error_prefab_entity");
+	sprintf(errStr, "prefabShortName:%s", prefabShortName.c_str());
+	EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 	if (prefabShortName == "error_prefab_entity" || !CreatePrefab(resourceFilename, prefabShortName, spawnArgs, prefabManagerIndex)) {
 		result = resourceList[0];
 		return false;

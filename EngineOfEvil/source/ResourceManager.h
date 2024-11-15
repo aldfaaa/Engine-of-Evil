@@ -164,13 +164,14 @@ inline bool eResourceManager<type>::BatchLoad(const char * resourceBatchFilename
 	std::ifstream	read(resourceBatchFilename);
 	std::string message;
 	int numLoadFailures = 0;
-	// EVIL_ERROR_LOG.ErrorPopupWindow("call  BatchLoad");
+	sprintf(errStr, "resourceBatchFilename:%s", resourceBatchFilename);
+	EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 	// unable to find/open file
 	if(!read.good()) {
 			message = "Unable to open batch file: ";
 			message += resourceBatchFilename;
 			EVIL_ERROR_LOG.LogError(message.c_str(), __FILE__, __LINE__);
-			// EVIL_ERROR_LOG.ErrorPopupWindow(message.c_str());
+			// // EVIL_ERROR_LOG.ErrorPopupWindow(message.c_str());
 	}
 
 	char resourceFilename[MAX_ESTRING_LENGTH];
@@ -190,12 +191,16 @@ inline bool eResourceManager<type>::BatchLoad(const char * resourceBatchFilename
 			message = "Resource load failure: ";
 			message += resourceFilename;
 			EVIL_ERROR_LOG.LogError(message.c_str(), __FILE__, __LINE__);
-			// EVIL_ERROR_LOG.ErrorPopupWindow(message.c_str());
 			++numLoadFailures;
+			// if (strlen(resourceFilename) == 0)
+			// 	break;
 		}
 
 		read.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // skip the rest of the line
 	}
+
+	sprintf(errStr, "read.eof() == true");
+	// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 	read.close();
 
 	if (numLoadFailures > 0) {
@@ -205,7 +210,7 @@ inline bool eResourceManager<type>::BatchLoad(const char * resourceBatchFilename
 		EVIL_ERROR_LOG.LogError(message.c_str(), __FILE__, __LINE__);
 	}
 	sprintf(errStr, "numLoadFailures:(%d)", numLoadFailures);
-	// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+	// // EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 	return numLoadFailures == 0;
 }
 

@@ -48,7 +48,7 @@ bool eRenderer::Init(const char * name, int windowWidth, int windowHeight) {
 							   SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 
 	if (!window) {
-		EVIL_ERROR_LOG.ErrorPopupWindow("SDL_CreateWindow FAILURE");
+		// EVIL_ERROR_LOG.ErrorPopupWindow("SDL_CreateWindow FAILURE");
 		return false;
 	}
 
@@ -56,7 +56,7 @@ bool eRenderer::Init(const char * name, int windowWidth, int windowHeight) {
 	internal_renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_TARGETTEXTURE);
 
 	if (!internal_renderer) {
-		EVIL_ERROR_LOG.ErrorPopupWindow("SDL_CreateRenderer FAILURE");
+		// EVIL_ERROR_LOG.ErrorPopupWindow("SDL_CreateRenderer FAILURE");
 		return false;
 	}
 
@@ -73,18 +73,18 @@ bool eRenderer::Init(const char * name, int windowWidth, int windowHeight) {
 		return false;
 
 	if (TTF_Init() == -1) {
-		EVIL_ERROR_LOG.ErrorPopupWindow("TTF_Init() FAILURE");
+		// EVIL_ERROR_LOG.ErrorPopupWindow("TTF_Init() FAILURE");
 		return false;
 	}
 
-	font = TTF_OpenFont(FONT_PATH, 18);				// FIXME: make this a file-initialized string, not hard-coded
+	font = TTF_OpenFont("Graphics/Fonts/Alfphabet.ttf", 24);				// FIXME: make this a file-initialized string, not hard-coded
 
 	if (!font) {
 		char errStr[64] = {0};
 		sprintf(errStr, "TTF_OpenFont(%s):%s", FONT_PATH, TTF_GetError());
 		// SDL_LogError(0, "error opening font 18 %s\n%s\\n", FONT_PATH,
     //              TTF_GetError());
-		EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+		// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 		return false;
 	}
 

@@ -46,7 +46,7 @@ bool eImageManager::Init() {
 
 	if (!error_texture) {
 		sprintf(errStr, "error_texture == 0:%s", SDL_GetError());
-		// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+		// // EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 		return false;
 	}
 
@@ -59,7 +59,7 @@ bool eImageManager::Init() {
 	int pitch = 0;
 	if (SDL_LockTexture(error_texture, NULL, &pixels, &pitch) == -1) {
 		sprintf(errStr, "SDL_LockTexture == 0:%s", SDL_GetError());
-		// EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
+		// // EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 		SDL_DestroyTexture(error_texture);
 		return false;
 	}
@@ -224,26 +224,26 @@ bool eImageManager::LoadAndGet(const char * resourceFilename, std::shared_ptr<eI
 		default: accessType = SDL_TEXTUREACCESS_STATIC; break;
 	}
 
-	sprintf(errStr, "accessInt(%d)", accessInt);
+	// sprintf(errStr, "accessInt(%d)", accessInt);
 	EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 	SDL_Texture * texture = NULL;
 	if (accessType != SDL_TEXTUREACCESS_STATIC) {
 		SDL_Surface * source = IMG_Load(textureFilepath);
 
-		sprintf(errStr, "accessInt(%x)", source);
+		// sprintf(errStr, "accessInt(%x)", source);
 		EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 		// unable to load file
 		if (source == NULL) {
 			result = resourceList[0]; // default error image
 			return false;
 		}
-		// EVIL_ERROR_LOG.ErrorPopupWindow("prepare IMG_LoadTexture ");
+		// // EVIL_ERROR_LOG.ErrorPopupWindow("prepare IMG_LoadTexture ");
 		texture = SDL_CreateTexture(game->GetRenderer().GetSDLRenderer(),
 												  source->format->format,
 												  accessType, 
 												  source->w, 
 												  source->h);
-		sprintf(errStr, "accessInt(%x)", texture);
+		// sprintf(errStr, "accessInt(%x)", texture);
 		EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 		// unable to initialize texture
 		if (texture == NULL) {
@@ -262,13 +262,15 @@ bool eImageManager::LoadAndGet(const char * resourceFilename, std::shared_ptr<eI
 		SDL_FreeSurface(source);
 		SDL_SetTextureBlendMode(texture, SDL_BLENDMODE_BLEND);
 	} else {
-		// EVIL_ERROR_LOG.ErrorPopupWindow("prepare SDL_CreateTexture");
+		// // EVIL_ERROR_LOG.ErrorPopupWindow("prepare SDL_CreateTexture");
 		/// FIXME:第二次执行此处会加载失败
 		texture = IMG_LoadTexture(game->GetRenderer().GetSDLRenderer(), textureFilepath);
-		sprintf(errStr, "IMG_LoadTexture(%s):%s", textureFilepath, SDL_GetError());
+		sprintf(errStr, "IMG_LoadTexture(%s)", textureFilepath);
 		EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 		// unable to initialize texture
 		if (texture == NULL) {
+			sprintf(errStr, "IMG_LoadTexture(%s):%s", textureFilepath, SDL_GetError());
+			EVIL_ERROR_LOG.ErrorPopupWindow(errStr);
 			result = resourceList[0]; // default error image
 			return false;
 		}

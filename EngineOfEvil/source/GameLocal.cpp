@@ -46,17 +46,17 @@ bool eGameLocal::Init() {
 
 	// TODO: just load a map, there's no real init...unless setting the view camera were it (and that can't fail)
 	if (!map.Init()) {
-		EVIL_ERROR_LOG.ErrorPopupWindow("MAP INIT FAILURE");
+		// EVIL_ERROR_LOG.ErrorPopupWindow("MAP INIT FAILURE");
 		return false;
 	}
 
 	//if (!music.Load("Audio/Music/music_modern_war.wav")) {
-	//	EVIL_ERROR_LOG.ErrorPopupWindow("MUSIC LOAD FAILURE");
+	//	// EVIL_ERROR_LOG.ErrorPopupWindow("MUSIC LOAD FAILURE");
 	//	return false;
 	//}
 
 	//if (!soundFx.Load("Audio/Music/music_modern_war.wav")) {
-	//	EVIL_ERROR_LOG.ErrorPopupWindow("SOUNDFX LOAD FAILURE");
+	//	// EVIL_ERROR_LOG.ErrorPopupWindow("SOUNDFX LOAD FAILURE");
 	//	return false;
 	//}
 

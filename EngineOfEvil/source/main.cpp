@@ -29,6 +29,9 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 // Original Copyright (C) Thomas Matthew Freehill July 29 2016 //
 //*************************************************************//
 #include "GameLocal.h"
+#include <iostream>
+
+using namespace std;
 
 // DEBUG: not using SDL_main
 #undef main
@@ -51,11 +54,14 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 	// and for faster testing compile times
 
 	if (!game->InitSystem()) {
+		cout << "the game has shutdown!" << endl;
 		game->ShutdownSystem();
 		return 1;
 	}
 
 	game->Run();
+
+	cout << "the game done!" << endl;
 
 	return 0;
 }

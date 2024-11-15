@@ -28,6 +28,8 @@ If you have questions concerning this license, you may contact Thomas Freehill a
 #include "GameObject.h"
 #include "Map.h"
 #include <cstdio>
+
+extern char errStr[128];
 //**************
 // eGameObject::eGameObject
 //**************
@@ -150,6 +152,8 @@ void eGameObject::UpdateComponents() {
 // returns false if not because the filename is invalid, or the file is unreadable
 //*************
 bool eGameObject::AddRenderImage( const std::string & spriteFilename, const eVec3 & renderBlockSize, int initialSpriteFrame, const eVec2 & renderImageOffset, bool isPlayerSelectable ) {
+	sprintf(errStr, "AddRenderImage(%s)", spriteFilename.c_str());
+	EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 	if (spriteFilename.empty())
 		return false;
 
@@ -158,8 +162,8 @@ bool eGameObject::AddRenderImage( const std::string & spriteFilename, const eVec
 
 	/// BUG:此处LoadAndGet会失败!
 	if (!game->GetImageManager().LoadAndGet(spriteFilename.c_str(), spriteImage)) {
-		printf("LoadAndGet(%s) => false\n", spriteFilename.c_str());
-		EVIL_ERROR_LOG.LogError("LoadAndGet() => false", __FILE__, __LINE__);
+		sprintf(errStr, "LoadAndGet(%s) => false", spriteFilename.c_str());
+		EVIL_ERROR_LOG.LogError(errStr, __FILE__, __LINE__);
 		return false;
 	}
 

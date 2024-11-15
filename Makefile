@@ -21,11 +21,12 @@ EM_BUILD_DIR := dist
 
 # -I/opt/ye/WebAssembly/emsdk-main/upstream/emscripten/cache/sysroot/include/SDL
 
-EMFLAGS := -I./EngineOfEvil/source \
+EMFLAGS := -g -gsource-map -I./EngineOfEvil/source \
 					-I/opt/ye/WebAssembly/emsdk-main/upstream/emscripten/cache/sysroot/include/SDL2
 
-EMLFLAGS := -sUSE_SDL=2 -sUSE_SDL_TTF=2 -sUSE_SDL_IMAGE=2 -sUSE_SDL_MIXER=2 -sUSE_LIBPNG \
-					-sALLOW_MEMORY_GROWTH --embed-file asset_dir@/ 
+EMLFLAGS := -s USE_SDL=2 -s USE_SDL_TTF=2 -s USE_SDL_IMAGE=2 -s USE_SDL_MIXER=2 \
+					-s SDL2_IMAGE_FORMATS='["png"]' \
+					-sALLOW_MEMORY_GROWTH --preload-file asset_dir@/
 
 #--preload-file asset_dir@/
 
@@ -57,11 +58,11 @@ wasm_build_dir:
 # cp index.html $(EM_BUILD_DIR)
 
 wasm: $(OBJS)
-	EMCC_DEBUG=0
 	$(EMCC) $(OBJS) $(EMFLAGS) $(EMLFLAGS) -o $(EM_BUILD_DIR)/index.html 
 
 ${OBJS}:%.o : %.cpp
 	${EMCC} -c $< -o $@ $(EMFLAGS)
 
+# EMCC_DEBUG=1
 
 .PHONY: all clean compile compile_run debug wasm wasm_serve wasm_build_dir publish
